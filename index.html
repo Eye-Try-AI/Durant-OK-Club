@@ -90,6 +90,30 @@
             text-transform: uppercase;
         }
 
+        .sound-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+            font-size: 1.5rem;
+        }
+
+        .sound-toggle:hover {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(212, 175, 55, 0.2));
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
         section {
             max-width: 1200px;
             margin: 0 auto;
@@ -156,6 +180,10 @@
             padding: 1rem;
             border-radius: 8px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .ai-companies {
@@ -367,6 +395,11 @@
     <audio id="bgAudio" loop>
         <source src="https://github.com/TitanBusinessPros/SGA-1/raw/main/A.I.%20Try%20I%2C%20I%20Try%20A.I.%2C%20Try%20I%20A.I.%20%2CA.I..mp3" type="audio/mpeg">
     </audio>
+
+    <!-- Sound Toggle Button -->
+    <div class="sound-toggle" id="soundToggle" title="Toggle Sound">
+        🔊
+    </div>
 
     <header>
         <div class="current-time" id="currentTime"></div>
@@ -878,7 +911,9 @@
 
         // Audio autoplay on user interaction
         const audio = document.getElementById('bgAudio');
+        const soundToggle = document.getElementById('soundToggle');
         let audioStarted = false;
+        let isMuted = false;
 
         function startAudio() {
             if (!audioStarted) {
@@ -887,8 +922,30 @@
             }
         }
 
+        // Toggle sound on/off
+        soundToggle.addEventListener('click', function() {
+            if (isMuted) {
+                audio.muted = false;
+                soundToggle.textContent = '🔊';
+                isMuted = false;
+            } else {
+                audio.muted = true;
+                soundToggle.textContent = '🔇';
+                isMuted = true;
+            }
+            
+            // Start audio if not already started
+            if (!audioStarted) {
+                startAudio();
+            }
+        });
+
         window.addEventListener('scroll', startAudio, { once: true });
-        window.addEventListener('click', startAudio, { once: true });
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('#soundToggle')) {
+                startAudio();
+            }
+        }, { once: true });
     </script>
 </body>
 </html>
